@@ -1,6 +1,6 @@
 package com.area.model;
 
-public class AreaVO {
+public class AreaVO implements java.io.Serializable{
 
 	private Integer areaid;
 	private String cityname;
