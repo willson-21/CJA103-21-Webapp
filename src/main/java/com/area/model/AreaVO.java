@@ -1,4 +1,4 @@
-package com.area;
+package com.area.model;
 
 public class AreaVO {
 
