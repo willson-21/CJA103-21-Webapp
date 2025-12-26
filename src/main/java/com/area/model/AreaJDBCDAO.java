@@ -1,51 +1,45 @@
 package com.area.model;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import javax.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
-public class AreaDAO {
-
-	private static DataSource ds = null;
-	static {
-		try {
-			Context ctx = new InitialContext();
-			ds = (DataSource) ctx.lookup("java:comp/env/jdbc/TestDB2");
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-	}
+public class AreaJDBCDAO implements AreaDAO_interface {
+	String driver = "com.mysql.cj.jdbc.Driver";
+	String url = "jdbc:mysql://localhost:3306/cja103g3?serverTimezone=Asia/Taipei";
+	String userid = "root";
+	String passwd = "357753";
+	
 	private static final String INSERT_STMT = "INSERT INTO area(city_name,district) VALUES (?,?)";
 	private static final String GET_ALL_STMT = "SELECT area_id,city_name,district FROM area order by area_id";
 	private static final String GET_ONE_STMT = "SELECT area_id,city_name,district FROM area where area_id = ?";
 	private static final String DELETE = "DELETE FROM area where area_id = ?";
 	private static final String UPDATE = "UPDATE area set city_name=?,district=? where area_id =?";
-
-	// 新增
+	
+	@Override
 	public void insert(AreaVO areaVO) {
-
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
-
+		
 		try {
-
-			con = ds.getConnection();
-			pstmt = con.prepareStatement(INSERT_STMT);
 			
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(INSERT_STMT);
 			
 			pstmt.setString(1, areaVO.getCityName());
 			pstmt.setString(2, areaVO.getDistrict());
-
+			
 			pstmt.executeUpdate();
-
+			
+		}catch(ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+e.getMessage());
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured." + se.getMessage());
 		} finally {
@@ -63,25 +57,32 @@ public class AreaDAO {
 					e.printStackTrace(System.err);
 				}
 			}
-		}
+		} 
+		
 	}
-	
+	@Override
 	public void update(AreaVO areaVO) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		
 		try {
-			con = ds.getConnection();
+			
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(UPDATE);
 			
-			pstmt.setInt(1, areaVO.getAreaId());
+		
 			pstmt.setString(1, areaVO.getCityName());
 			pstmt.setString(2, areaVO.getDistrict());
+			pstmt.setInt(3, areaVO.getAreaId());
 			
 			pstmt.executeUpdate();
 			
-		}catch(SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
+		}catch(ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+e.getMessage());
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured." + se.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -97,28 +98,30 @@ public class AreaDAO {
 					e.printStackTrace(System.err);
 				}
 			}
-		}
-		
+		} 
 		
 	}
-
-	// 刪除
+	@Override
 	public void delete(Integer areaid) {
-
+		
 		Connection con = null;
 		PreparedStatement pstmt = null;
-
+		
 		try {
-
-			con = ds.getConnection();
+			
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(DELETE);
-
+			
 			pstmt.setInt(1, areaid);
-
+			
 			pstmt.executeUpdate();
-
+			
+		}catch(ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+e.getMessage());
 		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
+			throw new RuntimeException("A database error occured." + se.getMessage());
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -134,38 +137,40 @@ public class AreaDAO {
 					e.printStackTrace(System.err);
 				}
 			}
-		}
+		} 
+		
 	}
-
-	// 使用pk單一查詢
+	@Override
 	public AreaVO findByPrimaryKey(Integer areaid) {
+		
 		AreaVO areaVO = null;
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
-			con = ds.getConnection();
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(GET_ONE_STMT);
+			
 			pstmt.setInt(1, areaid);
+			
 			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
+			
+			
+			while(rs.next()) {
 				areaVO = new AreaVO();
 				areaVO.setAreaId(rs.getInt("area_id"));
 				areaVO.setCityName(rs.getString("city_name"));
 				areaVO.setDistrict(rs.getString("district"));
+				
 			}
+		}catch(ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+e.getMessage());
 		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
+			throw new RuntimeException("A database error occured." + se.getMessage());
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
 			if (pstmt != null) {
 				try {
 					pstmt.close();
@@ -176,15 +181,15 @@ public class AreaDAO {
 			if (con != null) {
 				try {
 					con.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
 				}
 			}
-		}
+		} 
+		
 		return areaVO;
 	}
-
-	// 查詢全部
+	@Override
 	public List<AreaVO> getAll() {
 		List<AreaVO> list = new ArrayList<AreaVO>();
 		AreaVO areaVO = null;
@@ -192,31 +197,28 @@ public class AreaDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
-
-			con = ds.getConnection();
+			
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
 			pstmt = con.prepareStatement(GET_ALL_STMT);
 			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
+			
+			while(rs.next()) {
 				areaVO = new AreaVO();
 				areaVO.setAreaId(rs.getInt("area_id"));
 				areaVO.setCityName(rs.getString("city_name"));
 				areaVO.setDistrict(rs.getString("district"));
 				list.add(areaVO);
+				
 			}
+		}catch(ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+e.getMessage());
 		} catch (SQLException se) {
-			throw new RuntimeException("A database error occured. " + se.getMessage());
+			throw new RuntimeException("A database error occured." + se.getMessage());
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-
 			if (pstmt != null) {
 				try {
 					pstmt.close();
@@ -224,16 +226,51 @@ public class AreaDAO {
 					se.printStackTrace(System.err);
 				}
 			}
-
 			if (con != null) {
 				try {
 					con.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
 				}
 			}
-
-		}
+		} 
+		
 		return list;
 	}
+	
+	public static void main(String[] args) {
+		AreaJDBCDAO dao = new AreaJDBCDAO();
+		
+		//新增
+//		AreaVO areaVO1 = new AreaVO();
+//		areaVO1.setCityName("桃園市");
+//		areaVO1.setDistrict("大園區");
+//		dao.insert(areaVO1);
+		
+		//修改
+//		AreaVO areaVO2 = new AreaVO();
+//		areaVO2.setAreaId(6);
+//		areaVO2.setCityName("臺南市");
+//		areaVO2.setDistrict("新化區");
+//		dao.update(areaVO2);
+		
+		//刪除
+//		dao.delete(6);
+		
+		//單一查詢
+//		AreaVO areaVO3 = dao.findByPrimaryKey(5);
+//		System.out.print(areaVO3.getAreaId() + ".vu");
+//		System.out.print(areaVO3.getCityName() + ",");
+//		System.out.print(areaVO3.getDistrict() );
+		
+		//查詢全部
+		List<AreaVO> list = dao.getAll();
+		for(AreaVO xArea : list) {
+			System.out.print(xArea.getAreaId()+".");
+			System.out.print(xArea.getCityName()+",");
+			System.out.print(xArea.getDistrict()+"\n");
+		}
+				
+	}
+	
 }

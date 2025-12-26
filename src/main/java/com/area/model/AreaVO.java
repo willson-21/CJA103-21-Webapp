@@ -1,32 +1,36 @@
 package com.area.model;
 
-public class AreaVO implements java.io.Serializable{
+import java.io.Serializable;
 
-	private Integer areaid;
-	private String cityname;
-	private String district;
+public class AreaVO implements Serializable {
 
-	public Integer getAreaid() {
-		return areaid;
-	}
+    private Integer areaid;     // 對應資料庫欄位 area_id
+    private String cityname;    // 對應資料庫欄位 city_name
+    private String district;    // 對應資料庫欄位 district
 
-	public void setAreaid(Integer areaid) {
-		this.areaid = areaid;
-	}
+    public AreaVO() {}
 
-	public String getCityname() {
-		return cityname;
-	}
+    public Integer getAreaId() {
+        return areaid;
+    }
 
-	public void setCityname(String cityname) {
-		this.cityname = cityname;
-	}
+    public void setAreaId(Integer areaid) {
+        this.areaid = areaid;
+    }
 
-	public String getDistrict() {
-		return district;
-	}
+    public String getCityName() {
+        return cityname;
+    }
 
-	public void setDistrict(String district) {
-		this.district = district;
-	}
+    public void setCityName(String cityname) {
+        this.cityname = cityname;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 }
