@@ -3,10 +3,13 @@ package com.area.model;
 import java.util.*;
 
 public interface AreaDAO_interface {
-		public void insert(AreaVO areaVO);
-		public void update(AreaVO areaVO);
-		public void delete(Integer areaid);
-		public AreaVO findByPrimaryKey(Integer areaid);
-		
-		public List<AreaVO> getAll();
+
+    void insert(AreaVO areaVO);
+    void update(AreaVO areaVO);
+    void delete(Integer areaId);
+    AreaVO findByPrimaryKey(Integer areaId);
+    List<AreaVO> getAll();
+
+    //  新增：檢查縣市 + 地區是否已存在
+    AreaVO findByCityAndDistrict(String cityName, String district);
 }

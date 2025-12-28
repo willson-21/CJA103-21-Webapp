@@ -238,6 +238,47 @@ public class AreaJDBCDAO implements AreaDAO_interface {
 		return list;
 	}
 	
+	@Override
+	public AreaVO findByCityAndDistrict(String cityName, String district) {
+
+	    AreaVO areaVO = null;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        
+	        Class.forName(driver);
+	        con = DriverManager.getConnection(url, userid, passwd);
+
+	        String sql = "SELECT area_id, city_name, district "
+	                   + "FROM area WHERE city_name = ? AND district = ?";
+
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, cityName);
+	        pstmt.setString(2, district);
+
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            areaVO = new AreaVO();
+	            areaVO.setAreaId(rs.getInt("area_id"));
+	            areaVO.setCityName(rs.getString("city_name"));
+	            areaVO.setDistrict(rs.getString("district"));
+	        }
+
+	    } catch (ClassNotFoundException e) {
+	        throw new RuntimeException("Couldn't load database driver. " + e.getMessage());
+	    } catch (SQLException se) {
+	        throw new RuntimeException("A database error occured. " + se.getMessage());
+	    } finally {
+	        if (rs != null) try { rs.close(); } catch (SQLException e) {}
+	        if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
+	        if (con != null) try { con.close(); } catch (SQLException e) {}
+	    }
+
+	    return areaVO;
+	}
 	public static void main(String[] args) {
 		AreaJDBCDAO dao = new AreaJDBCDAO();
 		

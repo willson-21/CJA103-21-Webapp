@@ -4,26 +4,26 @@ import java.io.Serializable;
 
 public class AreaVO implements Serializable {
 
-    private Integer areaid;     // 對應資料庫欄位 area_id
-    private String cityname;    // 對應資料庫欄位 city_name
+    private Integer areaId;     // 對應資料庫欄位 area_id
+    private String cityName;    // 對應資料庫欄位 city_name
     private String district;    // 對應資料庫欄位 district
 
     public AreaVO() {}
 
     public Integer getAreaId() {
-        return areaid;
+        return areaId;
     }
 
-    public void setAreaId(Integer areaid) {
-        this.areaid = areaid;
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
     }
 
     public String getCityName() {
-        return cityname;
+        return cityName;
     }
 
-    public void setCityName(String cityname) {
-        this.cityname = cityname;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public String getDistrict() {
