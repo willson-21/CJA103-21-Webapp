@@ -164,11 +164,11 @@ public class AreaServlet extends HttpServlet{
 		
 		if ("insert".equals(action)) {
 
-		    // 1. 建立錯誤訊息容器
+		   
 		    List<String> errorMsgs = new LinkedList<>();
 		    req.setAttribute("errorMsgs", errorMsgs);
 
-		    // 2. 取得並驗證 cityName
+		   
 		    String cityName = req.getParameter("cityName");
 		    if (cityName == null || cityName.trim().isEmpty()) {
 		        errorMsgs.add("縣市名稱: 請勿空白");
@@ -176,7 +176,7 @@ public class AreaServlet extends HttpServlet{
 		        errorMsgs.add("縣市名稱: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間");
 		    }
 
-		    // 3. 取得並驗證 district
+		    
 		    String district = req.getParameter("district");
 		    if (district == null || district.trim().isEmpty()) {
 		        errorMsgs.add("地區名稱: 請勿空白");
@@ -219,7 +219,7 @@ public class AreaServlet extends HttpServlet{
 		        successView.forward(req, res);
 
 		    } catch (Exception e) {
-		        // 例外處理，避免 500
+		        
 		        errorMsgs.add("新增資料失敗: " + e.getMessage());
 		        req.setAttribute("areaVO", areaVO);
 		        RequestDispatcher failureView = req.getRequestDispatcher("/back_end/area/addArea.jsp");

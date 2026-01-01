@@ -10,6 +10,6 @@ public interface AreaDAO_interface {
     AreaVO findByPrimaryKey(Integer areaId);
     List<AreaVO> getAll();
 
-    //  新增：檢查縣市 + 地區是否已存在
+    // 檢查縣市 + 地區是否已存在
     AreaVO findByCityAndDistrict(String cityName, String district);
 }

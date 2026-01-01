@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class AreaVO implements Serializable {
 
-    private Integer areaId;     // 對應資料庫欄位 area_id
-    private String cityName;    // 對應資料庫欄位 city_name
-    private String district;    // 對應資料庫欄位 district
+    private Integer areaId;     
+    private String cityName;    
+    private String district;    
 
     public AreaVO() {}
 

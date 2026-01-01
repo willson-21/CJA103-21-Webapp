@@ -28,7 +28,7 @@ public class AreaDAO {
     private static final String UPDATE =
             "UPDATE area SET city_name=?, district=? WHERE area_id=?";
 
-    // ===== 新增 =====
+
     public void insert(AreaVO areaVO) {
         try (
             Connection con = ds.getConnection();
